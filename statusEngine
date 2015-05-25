@@ -1,0 +1,8 @@
+#!/usr/bin/php
+<?php
+
+$cmd = 'ping -c 5 localhost';
+
+exec($cmd, $output, $returnVal);
+
+print_r($output);
