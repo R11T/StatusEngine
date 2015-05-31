@@ -1,8 +1,34 @@
 #!/usr/bin/php
 <?php
 
-$cmd = 'ping -c 5 localhost';
+$config = json_decode(file_get_contents('config.json'), true);
 
-exec($cmd, $output, $returnVal);
+if (JSON_ERROR_NONE !== json_last_error()) {
+    echo 'Config isn\'t a json file', "\n";
+    echo 'reason : ' . json_last_error_msg();
+    exit();
+}
 
+
+$errno   = -1;
+$errStr  = '';
+$timeout = 3;
+$output  = [];
+
+foreach ($config['servers'] as $server) {
+    $connection = @fsockopen($server['host'], $server['port'], $errno, $errStr, $timeout);
+    if (is_resource($connection)) {
+        $status = 'Success !';
+        fclose($connection);
+    } else {
+        $status = 'Failed !';
+    }
+    $output[$server['name']] = [
+        'status' => $status,
+        'code'   => $errno,
+        'msg'    => $errStr,
+    ];
+}
 print_r($output);
+
+//echo json_encode($output), "\n";

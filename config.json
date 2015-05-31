@@ -1,5 +1,19 @@
 {
     "servers":[
-        "localhost"
+        {
+            "host": "localhost",
+            "port": 3306,
+            "name": "MySQL"
+        },
+        {
+            "host": "localhost",
+            "port": 80,
+            "name": "HTTP"
+        },
+        {
+            "host": "localhost",
+            "port": 22,
+            "name": "SSH"
+        }
     ]
 }
