@@ -2,6 +2,7 @@
 <?php
 
 $required = [
+    'Const.php',
     'Vendor/autoload.php',
 ];
 
@@ -9,41 +10,8 @@ require 'dependencies.php';
 
 loadDependencies($required);
 
-
-$config = json_decode(file_get_contents('config.json'), true);
-
 $request = new \App\Library\Io\Request($argv, $argc);
 $main    = new \App\Main($request);
 $main->run();
-
-//----------
-
-if (JSON_ERROR_NONE !== json_last_error()) {
-    echo 'Config isn\'t a json file', "\n";
-    echo 'reason : ' . json_last_error_msg();
-    exit();
-}
-
-
-$errno   = -1;
-$errStr  = '';
-$timeout = 3;
-$output  = [];
-
-foreach ($config['servers'] as $server) {
-    $connection = @fsockopen($server['host'], $server['port'], $errno, $errStr, $timeout);
-    if (is_resource($connection)) {
-        $status = 'Success !';
-        fclose($connection);
-    } else {
-        $status = 'Failed !';
-    }
-    $output[$server['name']] = [
-        'status' => $status,
-        'code'   => $errno,
-        'msg'    => $errStr,
-    ];
-}
-print_r($output);
-
+// That's all folks !
 //echo json_encode($output), "\n";

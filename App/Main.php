@@ -37,16 +37,21 @@ class Main
      */
     public function run()
     {
-        $app = new Library\App();
-        switch($this->request->getAction()) {
-            case 'start':
-                $app->start();
-                break;
-            case 'help':
-            default:
-            $actions = ['start'];
-            sort($actions);
-                echo 'Usage: {' . implode(', ', $actions) . '}', "\n";
+        try {
+            $app = new Library\App();
+            switch($this->request->getAction()) {
+                case 'start':
+                    $app->start();
+                    break;
+                case 'help':
+                default:
+                    $actions = ['start'];
+                    sort($actions);
+                    echo 'Usage: {' . implode(', ', $actions) . '}', "\n";
+                    }
+        } catch (\Exception $e) {
+            echo $e->getMessage(), "\n";
+            exit(1);
         }
     }
 }
