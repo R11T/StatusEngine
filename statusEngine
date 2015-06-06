@@ -7,11 +7,14 @@ $required = [
 
 require 'dependencies.php';
 
+loadDependencies($required);
+
 
 $config = json_decode(file_get_contents('config.json'), true);
 
 $request = new \App\Library\Io\Request($argv, $argc);
-// $router = new \App\Router($request);
+$main    = new \App\Main($request);
+$main->run();
 
 //----------
 
