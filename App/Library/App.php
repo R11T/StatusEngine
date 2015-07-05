@@ -19,7 +19,7 @@ namespace App\Library;
  */
 class App
 {
-     /**
+    /**
      * Launch data gathering
      *
      * @return void

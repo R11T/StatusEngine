@@ -20,9 +20,9 @@ require 'dependencies.php';
 
 loadDependencies($required);
 
-$request = new \App\Library\Io\Request($argv, $argc);
 try {
-    $app = new \App\Library\App();
+    $request = new \App\Library\Io\Request($argv, $argc);
+    $app     = new \App\Library\App();
     switch($request->getAction()) {
         case 'start':
             $app->start();

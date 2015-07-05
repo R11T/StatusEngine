@@ -50,6 +50,9 @@ class Request
 
     public function __construct(array $argv, $argc)
     {
+        if (2 < $argc) {
+            throw new \Exception('Too many arguments, try type help');
+        }
         $this->argv = $argv;
         $this->argc = $argc;
     }
@@ -57,11 +60,11 @@ class Request
     /**
      * Returns action requested by the user
      *
-     * @return string|null if action doesn't exist
+     * @return string empty if action doesn't exist
      * @access public
      */
     public function getAction()
     {
-        return isset($this->argv[self::ACTION]) ? $this->argv[self::ACTION] : null;
+        return isset($this->argv[self::ACTION]) ? $this->argv[self::ACTION] : '';
     }
 }
