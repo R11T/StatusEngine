@@ -21,7 +21,21 @@ require 'dependencies.php';
 loadDependencies($required);
 
 $request = new \App\Library\Io\Request($argv, $argc);
-$main    = new \App\Main($request);
-$main->run();
+try {
+    $app = new \App\Library\App();
+    switch($request->getAction()) {
+        case 'start':
+            $app->start();
+            break;
+        case 'help':
+        default:
+            $actions = ['start'];
+            sort($actions);
+            echo 'Usage: {' . implode(', ', $actions) . '}', "\n";
+    }
+} catch (\Exception $e) {
+    echo $e->getMessage(), "\n";
+    exit(1);
+}
 // That's all folks !
 //echo json_encode($output), "\n";
