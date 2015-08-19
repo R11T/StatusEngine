@@ -69,7 +69,9 @@ class Analyzer
         $errno   = -1;
         $errStr  = '';
         $timeout = 3;
+        $start   = microtime(true);
         $connection = @fsockopen($server['host'], $server['port'], $errno, $errStr, $timeout);
+        $end     = microtime(true);
         if (is_resource($connection)) {
             $status = 'Success !';
             fclose($connection);
@@ -80,6 +82,7 @@ class Analyzer
             'status' => $status,
             'code'   => $errno,
             'msg'    => $errStr,
+            'responseDelay' => $end - $start,
         ];
     }
 }
