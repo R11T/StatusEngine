@@ -27,10 +27,24 @@ class App
      */
     public function start()
     {
-        $path     = CONFIG_DIR . 'config.json';
-        $config   = (new System\File($path))->getAsJson();
-        $analyzer = new Analyzer($config['servers']);
-        $results = $analyzer->checkServiceAvailability();
+        $configPath  = CONFIG_DIR . 'config.json';
+        $resultsPath = DATA_DIR . 'result.json';
+        $config      = (new System\File($configPath))->getJson();
+        $analyzer    = new Analyzer($config['servers']);
+        $results     = $analyzer->checkServiceAvailability();
+        (new System\File($resultsPath))->storeResults($results);
+    }
+
+    /**
+     * Show data embedded in results file
+     *
+     * @return void
+     * @access public
+     */
+    public function show()
+    {
+        $path    = DATA_DIR . 'result.json';
+        $results = (new System\File($path))->getJson();
         print_r($results);
     }
 }

@@ -27,9 +27,12 @@ try {
         case 'start':
             $app->start();
             break;
+        case 'show':
+            $app->show();
+            break;
         case 'help':
         default:
-            $actions = ['start'];
+            $actions = ['start', 'show'];
             sort($actions);
             echo 'Usage: {' . implode(', ', $actions) . '}', "\n";
     }
@@ -37,5 +40,3 @@ try {
     echo $e->getMessage(), "\n";
     exit(1);
 }
-// That's all folks !
-//echo json_encode($output), "\n";

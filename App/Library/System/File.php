@@ -40,16 +40,10 @@ class File
         $this->path = $path;
     }
 
-    /**
-     * Return content file
-     *
-     * @return string
-     * @access public
-     */
-    public function getAsString()
-    {
-        return file_get_contents($this->path);
-    }
+    // ------
+    // Input
+    // ------
+
 
     /**
      * Get json data
@@ -58,12 +52,79 @@ class File
      * @throws \Exception if file isn't a valid json file
      * @access public
      */
-    public function getAsJson()
+    public function getJson()
     {
         $content = json_decode($this->getAsString(), true);
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \Exception('Config is not a valid json file : ' . json_last_error_msg());
+            throw new \Exception('"' . $this->path . '" file is not a valid json file : ' . json_last_error_msg());
         }
         return $content;
+    }
+
+    /**
+     * Return content file
+     *
+     * @return string
+     * @access public
+     */
+    public function getAsString()
+    {
+        return is_file($this->path) ? file_get_contents($this->path) : '';
+    }
+
+
+    // --------
+    // Output
+    // --------
+
+
+    /**
+    * Store status data recently found
+    *
+    * @param array $results
+    *
+    * @return void
+    * @access public
+    */
+    public function storeResults(array $results)
+    {
+        $dataToStore = [];
+        $oldData     = $this->getJson();
+        foreach ($results as $name => $data) {
+            if (isset($oldData[$name])) {
+                $newData = $oldData[$name] + [time() => $data];
+            } else {
+                $newData[time()] = $data;
+            }
+            $dataToStore[$name] = $newData;
+        }
+        $this->setJson($dataToStore);
+    }
+
+    /**
+     * Set json data
+     *
+     * @return void
+     * @throws \Exception if an error occurs during encoding
+     * @access public
+     */
+    public function setJson(array $data)
+    {
+        $content = json_encode($data);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \Exception('Data can\'t be encoded to json format : ' . json_last_error_msg());
+        }
+        return $this->setAsString($content);
+    }
+
+    /**
+     * Set content into file
+     *
+     * @return void
+     * @access public
+     */
+    public function setAsString($string)
+    {
+        return file_put_contents($this->path, $string);
     }
 }

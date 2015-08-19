@@ -59,10 +59,12 @@ class Analyzer
     /**
      * Ask a service its status
      *
+     * @param array $server Server's data
+     *
      * @return array
      * @access private
      */
-    private function isServiceAlive($server)
+    private function isServiceAlive(array $server)
     {
         $errno   = -1;
         $errStr  = '';
