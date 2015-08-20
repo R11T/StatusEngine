@@ -13,76 +13,52 @@
 namespace App\Library;
 
 /**
-* Check servers/services statuses
+* Analyzer Builder
 *
 * @author Romain L.
 */
-class Analyzer
+abstract class Analyzer implements \App\Library\Interfaces\IAnalyzer
 {
     /**
      * Configuration data
      *
      * @var array
      *
-     * @access private
+     * @access protected
      */
-    private $config;
+    protected $config;
+
+    /**
+     * Fetch an analyzer depending on $type
+     *
+     * @param string $type Potential analyzer type
+     * @param array $config Configuration's file's content
+     *
+     * @return \App\Library\Analyzer
+     * @throws \Exception
+     * @access public
+     * @static
+     */
+    public static function getAnalyzer($type, array $config)
+    {
+        $class = '\App\Library\Analyzer\\' . ucfirst($type);
+        if (class_exists($class)) {
+            return new $class($config);
+        } else {
+            throw new \Exception('Unknown analyzer type : ' . $type);
+        }
+    }
 
     /**
      * Constructor
      *
-     * @param array $serversConfig
+     * @param array $config
      *
-     * @access public
+     * @access protected
      */
-    public function __construct(array $serversConfig)
+    protected function __construct(array $config)
     {
-        $this->config = $serversConfig;
+        $this->config = $config;
     }
 
-    /**
-     * Evaluate each service for availability
-     *
-     * @return array
-     * @access public
-     */
-    public function checkServiceAvailability()
-    {
-        $output  = [];
-
-        foreach ($this->config as $server) {
-            $output[$server['name']] = $this->isServiceAlive($server);
-        }
-        return $output;
-    }
-
-    /**
-     * Ask a service its status
-     *
-     * @param array $server Server's data
-     *
-     * @return array
-     * @access private
-     */
-    private function isServiceAlive(array $server)
-    {
-        $errno   = -1;
-        $errStr  = '';
-        $timeout = 3;
-        $start   = microtime(true);
-        $connection = @fsockopen($server['host'], $server['port'], $errno, $errStr, $timeout);
-        $end     = microtime(true);
-        if (is_resource($connection)) {
-            $status = 'Success !';
-            fclose($connection);
-        } else {
-            $status = 'Failed !';
-        }
-        return [
-            'status' => $status,
-            'code'   => $errno,
-            'msg'    => $errStr,
-            'responseDelay' => $end - $start,
-        ];
-    }
 }

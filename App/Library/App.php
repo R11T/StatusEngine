@@ -27,11 +27,12 @@ class App
      */
     public function start()
     {
-        $configPath  = CONFIG_DIR . 'config.json';
-        $resultsPath = DATA_DIR . 'result.json';
-        $config      = (new System\File($configPath))->getJson();
-        $analyzer    = new Analyzer($config['servers']);
-        $results     = $analyzer->checkServiceAvailability();
+        $configPath         = CONFIG_DIR . 'config.json';
+        $resultsPath        = DATA_DIR . 'result.json';
+        $config             = (new System\File($configPath))->getJson();
+        foreach ($config as $type => $elements) {
+            $results[$type] = Analyzer::getAnalyzer($type, $elements)->checkAvailability();
+        }
         (new System\File($resultsPath))->storeResults($results);
     }
 

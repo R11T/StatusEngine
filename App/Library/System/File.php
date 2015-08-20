@@ -79,24 +79,26 @@ class File
 
 
     /**
-    * Store status data recently found
-    *
-    * @param array $results
-    *
-    * @return void
-    * @access public
-    */
+     * Store status data recently found
+     *
+     * @param array $results
+     *
+     * @return void
+     * @access public
+     */
     public function storeResults(array $results)
     {
         $dataToStore = [];
         $oldData     = $this->getJson();
-        foreach ($results as $name => $data) {
-            if (isset($oldData[$name])) {
-                $newData = $oldData[$name] + [time() => $data];
-            } else {
-                $newData[time()] = $data;
+        foreach ($results as $group => $elements) {
+            foreach ($elements as $name => $data) {
+                if (isset($oldData[$group][$name])) {
+                    $newData = $oldData[$group][$name] + [time() => $data];
+                } else {
+                    $newData[time()] = $data;
+                }
+                $dataToStore[$group][$name] = $newData;
             }
-            $dataToStore[$name] = $newData;
         }
         $this->setJson($dataToStore);
     }
