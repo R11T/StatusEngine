@@ -20,30 +20,14 @@ namespace App\Library\Analyzer;
 class Server extends \App\Library\Analyzer
 {
     /**
-     * Evaluate each service for availability
-     *
-     * @return array
-     * @access public
-     */
-    public function checkAvailability()
-    {
-        $output  = [];
-
-        foreach ($this->config as $server) {
-            $output[$server['name']] = $this->isAlive($server);
-        }
-        return $output;
-    }
-
-    /**
      * Ask a service its status
      *
      * @param array $server Server's data
      *
      * @return array
-     * @access private
+     * @access protected
      */
-    private function isAlive(array $server)
+    protected function isAlive(array $server)
     {
         $errNo      = -1;
         $errStr     = '';

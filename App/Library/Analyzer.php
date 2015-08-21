@@ -17,7 +17,7 @@ namespace App\Library;
 *
 * @author Romain L.
 */
-abstract class Analyzer implements \App\Library\Interfaces\IAnalyzer
+abstract class Analyzer implements \App\Library\Interfaces\IAnalyzable
 {
     /**
      * Configuration data
@@ -60,5 +60,32 @@ abstract class Analyzer implements \App\Library\Interfaces\IAnalyzer
     {
         $this->config = $config;
     }
+
+    /**
+     * Evaluate each analyzable for availability
+     *
+     * @return array
+     * @access public
+     */
+    public function checkAvailability()
+    {
+        $output  = [];
+
+        foreach ($this->config as $analyzable) {
+            $output[$analyzable['name']] = $this->isAlive($analyzable);
+        }
+        return $output;
+    }
+
+
+    /**
+     * Ask an analyzable its status
+     *
+     * @param array $analyzable
+     *
+     * @return array
+     * @access protected
+     */
+    abstract protected function isAlive(array $analyzable);
 
 }

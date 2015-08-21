@@ -17,7 +17,7 @@ namespace App\Library\Interfaces;
  *
  * @author Romain L.
  */
-interface IAnalyzer
+interface IAnalyzable
 {
     /**
      * Evaluate each elements of the analyzer for availability

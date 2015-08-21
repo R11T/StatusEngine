@@ -20,30 +20,14 @@ namespace App\Library\Analyzer;
 class Storage extends \App\Library\Analyzer
 {
     /**
-     * Evaluate each storage for availability
-     *
-     * @return array
-     * @access public
-     */
-    public function checkAvailability()
-    {
-        $output  = [];
-
-        foreach ($this->config as $storage) {
-            $output[$storage['name']] = $this->isAlive($storage);
-        }
-        return $output;
-    }
-
-    /**
      * Ask a storage its status
      *
      * @param array $storage Storage's data
      *
      * @return array
-     * @access private
+     * @access protected
      */
-    private function isAlive(array $storage)
+    protected function isAlive(array $storage)
     {
         $errNo   = -1;
         $content = [];
@@ -51,15 +35,15 @@ class Storage extends \App\Library\Analyzer
         $start   = microtime(true);
         if (file_exists($storage['mountingPoint'])) {
             exec('df ' . escapeshellarg($storage['mountingPoint']), $content, $errNo);
+            if (0 !== $errNo) {
+                $status = 'Failed !';
+                $errStr = implode(', ', $content);
+            } else {
+                $status = 'Success !';
+                $errStr = '';
+            }
         }
-        $end     = microtime(true);
-        if (0 !== $errNo) {
-            $status = 'Failed !';
-            $errStr = implode(', ', $content);
-        } else {
-            $status = 'Success !';
-            $errStr = '';
-        }
+        $end = microtime(true);
         return [
             'status' => $status,
             'code'   => $errNo,
